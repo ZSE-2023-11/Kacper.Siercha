@@ -1,110 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Logowanie</title>
-
+    <meta charset="utf-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
 </head>
+
 <body>
-
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100&display=swap');
-
-body{
-  background: rgb(63,94,251);
-  background: radial-gradient(circle, rgba(63,94,251,1) 0%, rgba(252,70,107,1) 100%);
+        body {
+    margin: 0;
+    padding: 0;
+    font-family: arial;
+    background: rgb(160,168,207);
+    background: radial-gradient(circle, rgba(160,168,207,1) 0%, rgba(252,70,107,1) 100%);
+	animation: gradient 10s ease infinite;
+	height: 100vh;
 }
 
 
-.con{
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 200px;
+.login {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 400px;
+    height: 350px;
+    background: #d9d2e9;
+    border-radius: 5px;
+    text-align: center;
 }
 
-
-form{
-  height: 400px;
-  width: 600px;
-  background-color: #a0a8cf;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-direction: column;
+.login h1 {
+    text-align: center;
+    padding: 0 0 20px 0;
+    border-bottom: 3px solid silver;
 }
 
-input{
-border: #000000 solid;
-height: 25px;
+.login form {
+    padding: 0 40px;
+    box-sizing: border-box;
 }
 
-h1{
-  font-family: 'Roboto', sans-serif;
-  margin-bottom: 50px;
+form .input {
+    position: relative;
+    border-bottom: 2px solid #adadad;
+    margin: 30px 0;
 }
 
-label{
-  font-family: 'Roboto';
-  font-weight: 400;
- color: black;
+.input input {
+    width: 100%;
+    padding: 0 5px;
+    height: 40px;
+    font-size: 16px;
+    border: none;
+    background: none;
+    outline: none;
+
 }
 
-
-
-button {
-  align-items: center;
-  background-color: rgba(240, 240, 240, 0.26);
-  border: 1px solid #DFDFDF;
-  border-radius: 16px;
-  box-sizing: border-box;
-  color: #000000;
-  cursor: pointer;
-  display: flex;
-  font-family: Inter, sans-serif;
-  font-size: 18px;
-  justify-content: center;
-  line-height: 28px;
-  max-width: 100%;
-  padding: 14px 22px;
-  text-decoration: none;
-  transition: all .2s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
+input[type="submit"] {
+    width: 100%;
+    height: 50px;
+    border: 1px solid;
+    background: #9f86fd;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #e9f4fb;
+    font-weight: 700;
+    cursor: pointer;
+    outline: none;
+    transition: .5s;
 }
-</style>
 
-<div class="con">
-<form method="post">
-    <h1>Sign In</h1>
-    <label for="username">Login:</label>
-    <input type="text" id="username" name="username" required><br>
+input[type="submit"]:hover {
+    background-color: #8e7cc3;
+    color: #cec8ef;
+    border: solid #674ea7 4px;
+    transition: .5s;
+    border-radius: 20px;
+}
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required><br>
+form a {
+    margin-bottom: 0;
+}
 
-    <button type="submit">Sign in</button>
-</form>
-</div>
+    </style>
+    
+    <div class="login">
+        <h1>Logowanie</h1>
+        <form method="post">
+            <div class="input">
+                <input type="text" name="login" placeholder="login" required>
+            </div>
+            <div class="input">
+                <input type="text" name="password" placeholder="hasło" required>
+            </div>
+            <input type="submit" value="Zaloguj się">
+            <?php
+                $conn = new mysqli("127.0.0.1", "admin", "test", "baza");
 
+                if ($conn->connect_error) {
+                    die("Błąd: " . $conn->connect_error);
+                }
 
-<?php    
-    if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        if($_POST["username"] === "admin" && $_POST["password"] === "test")
-        {
-            $message = "Login sucessful";
-            echo "<script type='text/javascript'>alert('$message');</script>";
-        }
-        else 
-        {
-            $message = "Wrong login data";
-            echo "<script type='text/javascript'>alert('$message');</script>";
-        }
-    }
-?>
-
+                if ($_SERVER["REQUEST_METHOD"] == "POST") {
+                    if ($conn->query("SELECT * FROM users WHERE username='" . $conn->real_escape_string($_POST["login"]) . "' AND password='" . $conn->real_escape_string($_POST["password"]) . "'")->num_rows > 0) {
+                        echo "<a>Zalogowano</a>";
+                    } else {
+                        echo "<a>Niepoprawne dane logowania</a>";
+                    }
+                }
+            ?>
+        </form>
+    </div>
 </body>
 </html>
